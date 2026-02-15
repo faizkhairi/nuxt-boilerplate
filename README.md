@@ -202,4 +202,8 @@ docker compose -f docker-compose.prod.yml up -d
 
 ## License
 
-MIT
+[MIT](LICENSE)
+
+## Author
+
+**Faiz Khairi** — [faizkhairi.my](https://faizkhairi.my) — [@faizkhairi](https://github.com/faizkhairi)
