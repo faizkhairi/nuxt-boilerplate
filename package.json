@@ -2,7 +2,7 @@
   "name": "nuxt-boilerplate",
   "version": "1.0.0",
   "description": "Production-ready Nuxt 3 boilerplate with Auth, Prisma, Shadcn-vue, email templates, Stripe (opt-in), Docker Compose, and CI/CD. Zero external dependencies.",
-  "author": "Faiz Khairi <faiz@faizkhairi.my> (https://faizkhairi.my)",
+  "author": "Faiz Khairi <ifaizkhairi@gmail.com> (https://faizkhairi.my)",
   "license": "MIT",
   "private": true,
   "workspaces": [
