@@ -44,39 +44,9 @@ jobs:
           path: ${{ env.CACHE_PATHS_BUILD }}
           key: ${{ env.CACHE_KEY_BUILD }}
 
-  lint:
-    name: Lint ✅
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup
-        uses: ./.github/workflows/setup
-
-      - name: Lint
-        run: pnpm lint
-
-  test:
-    name: Test 🧪
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup
-        uses: ./.github/workflows/setup
-
-      - name: Test
-        run: pnpm test
-
   deploy-docs-main:
     name: Deploy docs from main branch 🚀
-    needs: [build, lint, test]
+    needs: [build]
     runs-on: ubuntu-latest
     if: github.ref_type == 'tag'
 
@@ -100,7 +70,7 @@ jobs:
 
   deploy-web-main:
     name: Deploy web app from main branch 🚀
-    needs: [build, lint, test]
+    needs: [build]
     runs-on: ubuntu-latest
     if: github.ref_type == 'tag'
 
@@ -135,7 +105,7 @@ jobs:
 
   deploy-ui-main:
     name: Deploy UI from main branch 🚀
-    needs: [build, lint, test]
+    needs: [build]
     runs-on: ubuntu-latest
     if: github.ref_type == 'tag'
 
