@@ -1,0 +1,19 @@
+{
+  "name": "@myturborepo/email",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./src/mailer.ts",
+  "types": "./src/mailer.ts",
+  "exports": {
+    ".": "./src/mailer.ts",
+    "./mailer": "./src/mailer.ts",
+    "./templates/*": "./templates/*"
+  },
+  "dependencies": {
+    "nodemailer": "^6.9.0"
+  },
+  "devDependencies": {
+    "@types/nodemailer": "^6.4.0",
+    "typescript": "^5.0.0"
+  }
+}

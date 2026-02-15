@@ -7,9 +7,13 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 export default defineNuxtModule({
   hooks: {
     'components:dirs'(dirs) {
+      // Auto-register all Shadcn-vue components with "Ui" prefix
+      // Usage: <UiButton>, <UiCard>, <UiInput>, <UiBadge>, etc.
       dirs.push({
         path: join(__dirname, 'components'),
-        prefix: 'MyTurborepo',
+        prefix: 'Ui',
+        pathPrefix: false,
+        global: true,
       })
     },
   },

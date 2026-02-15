@@ -1,116 +1,111 @@
-# Turborepo nuxt starter
+# Nuxt Boilerplate
 
-[![CI/CD](https://github.com/gurvan-guss/turborepo-nuxt-boilerplate/actions/workflows/ci.yaml/badge.svg)](https://github.com/gurvan-guss/turborepo-nuxt-boilerplate/actions/workflows/ci.yaml)
-[![App](https://img.shields.io/badge/App-Preview-blue?logo=netlify&logoColor=white)](https://turborepo-nuxt-boilerplate-web-main.netlify.app/)
-[![UI](https://img.shields.io/badge/UI(Histoire)-Preview-blue?logo=netlify&logoColor=white)](https://turborepo-nuxt-boilerplate-ui-main.netlify.app/)
-[![Docs](https://img.shields.io/badge/Docs(Vitepress)-Preview-blue?logo=netlify&logoColor=white)](https://turborepo-nuxt-boilerplate-docs-main.netlify.app/)
+Production-grade Nuxt 3 monorepo — zero external account dependencies. SaaS-ready scaffold with auth, database, email, UI components, and payments (opt-in).
 
-This is a monorepo with Nuxt, Histoire, Vitest & VitePress as a starter for any project that can be easily extended.
-You can also find additional branches:
-- [TailwindCSS](https://github.com/gurvan-guss/turborepo-nuxt-boilerplate/tree/tailwind)
-- [TailwindCSS + TailwindUI](https://github.com/gurvan-guss/turborepo-nuxt-boilerplate/tree/tailwindui)
-- [Unocss](https://github.com/gurvan-guss/turborepo-nuxt-boilerplate/tree/unocss)
-- [Unocss + Anu](https://github.com/gurvan-guss/turborepo-nuxt-boilerplate/tree/unocss-anu)
-- [Unocss + Vuetify](https://github.com/gurvan-guss/turborepo-nuxt-boilerplate/tree/unocss-vuetify)
-- [AdonisJS](https://github.com/gurvan-guss/turborepo-nuxt-boilerplate/tree/adonis)
+## Features
 
-## What's inside?
+- **Nuxt 3** with SSR, file-based routing, and Nitro server
+- **Shadcn-vue + Tailwind CSS** — copy-paste UI components with dark mode
+- **Prisma ORM + PostgreSQL** — type-safe database with migrations
+- **Nodemailer** — SMTP-agnostic email with pre-built templates
+- **Vitest + Playwright** — unit and E2E testing
+- **Turborepo** — monorepo with shared packages
+- **Docker Compose** — one-command local development
+- **Netlify** — zero-config deployment
 
-This turborepo uses [pnpm](https://pnpm.io) as a package manager. It includes the following packages/apps:
+## Quick Start
 
-### Apps and Packages
+```bash
+# 1. Create project from template
+gh repo create my-app --template faizkhairi/nuxt-boilerplate --private --clone
+cd my-app
 
-- `web`: a [Nuxt.js](https://nuxtjs.org) app
-- `docs`: a [VitePress](https://vitepress.vuejs.org/) app
-- `ui`: a stub Nuxt component library with [Histoire](https://histoire.dev/)
-- `config`: `eslint` configuration (using [@antfu/eslint-config](https://github.com/antfu/eslint-config))
-- `tsconfig`: `tsconfig.json`s used throughout the monorepo
-
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-
-### Setup
-
-To install all dependencies, run the following command:
-
-```
+# 2. Install dependencies
 pnpm install
+
+# 3. Start services (PostgreSQL + Mailpit)
+docker compose up -d
+
+# 4. Configure environment
+cp .env.example .env
+
+# 5. Sync database schema
+pnpm --filter @myturborepo/database db:push
+
+# 6. Start development
+pnpm dev
 ```
 
-### Develop
+**Access:**
+- App: http://localhost:3000
+- Mailpit (email testing): http://localhost:8025
+- Prisma Studio: `pnpm --filter @myturborepo/database db:studio`
 
-To develop all apps and packages, run the following command:
-
-```
-pnpm run dev
-```
-
-### Lint
-
-To check & fix linter through all apps and packages, run the following command:
+## Architecture
 
 ```
-pnpm run lint
-pnpm run lint:fix
+apps/
+├── web/              Nuxt 3 application
+└── docs/             VitePress documentation
+
+packages/
+├── ui/               Shadcn-vue components (Button, Card, Input, Badge, ...)
+├── database/         Prisma ORM + PostgreSQL schema
+├── email/            Nodemailer + email templates (welcome, password reset, verification)
+├── eslint-config/    Shared ESLint config
+└── tsconfig/         Shared TypeScript config
 ```
 
-### Test
+## Tech Stack
 
-To run tests through all apps and packages, run the following command:
+| Concern | Technology | External Account? |
+|---------|-----------|-------------------|
+| Framework | Nuxt 3 (Vue 3, Nitro) | No |
+| UI | Shadcn-vue + Tailwind CSS | No |
+| Database | Prisma + PostgreSQL (Docker) | No |
+| Email | Nodemailer + Mailpit (dev) | No |
+| Auth | Sidebase Nuxt Auth (Auth.js) | No |
+| Payments | Stripe (opt-in) | Only if needed |
+| Testing | Vitest + Playwright | No |
+| Deployment | Netlify | Free tier |
 
+## Commands
+
+| Command | Description |
+|---------|-------------|
+| `pnpm dev` | Start all apps |
+| `pnpm build` | Build all apps |
+| `pnpm test` | Run all tests |
+| `pnpm lint` | Lint all packages |
+| `docker compose up -d` | Start PostgreSQL + Mailpit |
+| `docker compose down` | Stop services |
+
+## Email
+
+**Development**: All emails are caught by Mailpit. View them at http://localhost:8025.
+
+**Production**: Set SMTP environment variables to use any email provider:
 ```
-pnpm run test
-```
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-pnpm run build
-```
-
-### Generate: SSG
-
-To statically generate this project:
-
-```
-pnpm run generate
-```
-
-### Remote Caching
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.org/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
-
-```
-pnpm dlx turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your turborepo:
-
-```
-pnpm dlx turbo link
+SMTP_HOST=smtp.resend.com
+SMTP_PORT=465
+SMTP_USER=resend
+SMTP_PASS=re_xxx
 ```
 
-Use a custom remote cache server [turbo-remote-cache](https://github.com/ducktors/turborepo-remote-cache)
+Works with: Resend, Mailgun, SendGrid, Gmail SMTP, or any SMTP server.
 
-## Useful Links
+## Deployment
 
-Learn more about the power of Turborepo:
+**Netlify** (recommended):
+```bash
+netlify deploy --build
+```
 
-- [Pipelines](https://turborepo.org/docs/core-concepts/pipelines)
-- [Caching](https://turborepo.org/docs/core-concepts/caching)
-- [Remote Caching](https://turborepo.org/docs/core-concepts/remote-caching)
-- [Scoped Tasks](https://turborepo.org/docs/core-concepts/scopes)
-- [Configuration Options](https://turborepo.org/docs/reference/configuration)
-- [CLI Usage](https://turborepo.org/docs/reference/command-line-reference)
+**Self-hosted** (Docker):
+```bash
+docker compose -f docker-compose.prod.yml up -d
+```
+
+## License
+
+MIT

@@ -1,39 +1,44 @@
-import { describe, expect, it } from 'vitest'
-import { mount } from '@vue/test-utils'
-import Button from '../components/Button.vue'
+import { describe, expect, it } from "vitest";
+import { mount } from "@vue/test-utils";
+import Button from "../components/button/Button.vue";
 
-describe('Button', () => {
-  it('is defined', () => {
-    const wrapper = mount(Button)
-    expect(wrapper).toBeDefined()
-  })
+describe("Button", () => {
+  it("is defined", () => {
+    const wrapper = mount(Button);
+    expect(wrapper).toBeDefined();
+  });
 
-  it('is disabled', () => {
+  it("renders as a button element by default", () => {
+    const wrapper = mount(Button);
+    expect(wrapper.element.tagName).toBe("BUTTON");
+  });
+
+  it("is disabled when disabled prop is true", () => {
     const wrapper = mount(Button, {
-      props: {
-        disabled: true,
-      },
-    })
+      props: { disabled: true },
+    });
+    const button = wrapper.find("button");
+    expect(button.element.disabled).toBe(true);
+  });
 
-    const button = wrapper.find('button')
-    expect(button.element.disabled).toBe(true)
-  })
-
-  it('has been clicked and event emitted', () => {
-    const wrapper = mount(Button)
-    const button = wrapper.find('button')
-    button.trigger('click')
-
-    expect(wrapper.emitted('submit')).toBeTruthy()
-  })
-
-  it('has a slot', () => {
+  it("renders slot content", () => {
     const wrapper = mount(Button, {
-      slots: {
-        default: 'Submit test',
-      },
-    })
+      slots: { default: "Click me" },
+    });
+    expect(wrapper.text()).toContain("Click me");
+  });
 
-    expect(wrapper.html()).toContain('Submit test')
-  })
-})
+  it("applies variant classes", () => {
+    const wrapper = mount(Button, {
+      props: { variant: "destructive" },
+    });
+    expect(wrapper.classes().join(" ")).toContain("bg-destructive");
+  });
+
+  it("applies size classes", () => {
+    const wrapper = mount(Button, {
+      props: { size: "lg" },
+    });
+    expect(wrapper.classes().join(" ")).toContain("h-10");
+  });
+});

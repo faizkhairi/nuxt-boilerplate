@@ -4,20 +4,22 @@
   "main": "nuxt.mjs",
   "private": true,
   "scripts": {
-    "dev": "histoire dev",
-    "build": "histoire build",
-    "preview": "histoire preview",
     "test": "vitest run --coverage"
   },
+  "dependencies": {
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.0",
+    "lucide-vue-next": "^0.460.0",
+    "radix-vue": "^1.9.0",
+    "tailwind-merge": "^2.5.0"
+  },
   "devDependencies": {
-    "@histoire/plugin-vue": "^0.16.1",
     "@myturborepo/tsconfig": "workspace:*",
     "@vitejs/plugin-vue": "^4.2.3",
-    "@vitest/coverage-c8": "^0.31.1",
-    "@vue/test-utils": "^2.3.2",
-    "c8": "^7.14.0",
-    "histoire": "^0.16.1",
-    "jsdom": "^20.0.3",
-    "vitest": "^0.31.1"
+    "@vitest/coverage-v8": "^2.0.0",
+    "@vue/test-utils": "^2.4.0",
+    "jsdom": "^24.0.0",
+    "vitest": "^2.0.0",
+    "vue": "^3.4.0"
   }
 }
