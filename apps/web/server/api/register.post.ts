@@ -1,6 +1,7 @@
 import { defineEventHandler, readBody } from "h3";
 import { registerUser } from "../utils/auth";
 import { logAudit } from "../utils/logger";
+import { checkRateLimit, RateLimitPresets } from "../utils/ratelimit";
 
 /**
  * POST /api/register
@@ -20,8 +21,17 @@ import { logAudit } from "../utils/logger";
  * @throws {400} Email and password are required
  * @throws {400} Email already exists
  * @throws {400} Registration failed
+ * @throws {429} Rate limit exceeded
  */
 export default defineEventHandler(async (event) => {
+  // Apply rate limiting (5 requests per minute)
+  if (checkRateLimit(event, RateLimitPresets.auth)) {
+    throw createError({
+      statusCode: 429,
+      message: RateLimitPresets.auth.message,
+    });
+  }
+
   const body = await readBody(event);
 
   const { email, password, name } = body;
