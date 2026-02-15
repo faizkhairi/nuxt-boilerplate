@@ -5,6 +5,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import bcrypt from "bcrypt";
+import { logAudit } from "~/server/utils/logger";
 
 export default NuxtAuthHandler({
   adapter: PrismaAdapter(prisma),
@@ -37,6 +38,7 @@ export default NuxtAuthHandler({
         });
 
         if (!user || !user.password) {
+          logAudit("AUTH_FAILURE", { email: credentials.email, reason: "user_not_found_or_no_password" });
           throw new Error("Invalid credentials");
         }
 
@@ -46,8 +48,11 @@ export default NuxtAuthHandler({
         );
 
         if (!isPasswordValid) {
+          logAudit("AUTH_FAILURE", { email: credentials.email, userId: user.id, reason: "invalid_password" });
           throw new Error("Invalid credentials");
         }
+
+        logAudit("AUTH_SUCCESS", { userId: user.id, email: user.email, method: "credentials" });
 
         return {
           id: user.id,
@@ -88,6 +93,11 @@ export default NuxtAuthHandler({
       if (user) {
         token.id = user.id;
         token.role = (user as any).role || "USER";
+
+        // Log OAuth login
+        if (account && account.provider !== "credentials") {
+          logAudit("OAUTH_LOGIN", { userId: user.id, email: user.email, provider: account.provider });
+        }
       }
       return token;
     },
