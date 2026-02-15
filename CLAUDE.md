@@ -66,6 +66,14 @@ packages/e2e/       — Playwright E2E tests
 - **Test files**: `packages/e2e/tests/*.spec.ts` — E2E test specs (landing, auth flow, etc.)
 - **Coverage**: `--coverage` flag enabled by default for unit tests
 
+## Pre-Push Build Verification
+
+**Always run the production build locally before pushing to CI:**
+```bash
+pnpm build
+```
+This catches type errors, missing imports, and Nitro build issues that dev mode silently ignores.
+
 ## Deployment
 - **Netlify**: `netlify deploy --build` (Nitro auto-detects Netlify preset)
 - **Docker**: `docker compose -f docker-compose.prod.yml up` (add prod compose as needed)
