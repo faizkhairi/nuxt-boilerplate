@@ -5,17 +5,17 @@ import { prisma } from "@myturborepo/database";
 let stripeClient: Stripe | null = null;
 
 export function getStripeClient(): Stripe {
-  const config = useRuntimeConfig();
+  const secretKey = process.env.STRIPE_SECRET_KEY;
 
-  if (!config.stripeSecretKey) {
+  if (!secretKey) {
     throw new Error(
       "Stripe is not configured. Set STRIPE_SECRET_KEY environment variable to enable payments."
     );
   }
 
   if (!stripeClient) {
-    stripeClient = new Stripe(config.stripeSecretKey, {
-      apiVersion: "2024-12-18.acacia",
+    stripeClient = new Stripe(secretKey, {
+      apiVersion: "2025-02-24.acacia",
       typescript: true,
     });
   }
@@ -153,9 +153,9 @@ export function verifyWebhookSignature(
   payload: string | Buffer,
   signature: string
 ): Stripe.Event {
-  const config = useRuntimeConfig();
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
-  if (!config.stripeWebhookSecret) {
+  if (!webhookSecret) {
     throw new Error(
       "Stripe webhook secret not configured. Set STRIPE_WEBHOOK_SECRET environment variable."
     );
@@ -167,7 +167,7 @@ export function verifyWebhookSignature(
     const event = stripe.webhooks.constructEvent(
       payload,
       signature,
-      config.stripeWebhookSecret
+      webhookSecret
     );
     return event;
   } catch (err: any) {
