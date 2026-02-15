@@ -1,0 +1,17 @@
+{
+  "name": "@myturborepo/auth",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./nuxt.config.ts",
+  "dependencies": {
+    "@sidebase/nuxt-auth": "^0.9.4",
+    "@auth/prisma-adapter": "^2.7.2",
+    "bcrypt": "^5.1.1",
+    "next-auth": "4.21.1"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@myturborepo/database": "workspace:*",
+    "@myturborepo/email": "workspace:*"
+  }
+}

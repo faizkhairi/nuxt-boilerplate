@@ -1,0 +1,17 @@
+{
+  "name": "@myturborepo/payments",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./server/*": "./server/*",
+    "./composables/*": "./composables/*"
+  },
+  "dependencies": {
+    "stripe": "^17.5.0",
+    "@myturborepo/database": "workspace:*"
+  },
+  "devDependencies": {
+    "@myturborepo/tsconfig": "workspace:*"
+  }
+}

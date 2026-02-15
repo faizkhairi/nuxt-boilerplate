@@ -52,6 +52,9 @@ packages/
 ├── ui/               Shadcn-vue components (Button, Card, Input, Badge, ...)
 ├── database/         Prisma ORM + PostgreSQL schema
 ├── email/            Nodemailer + email templates (welcome, password reset, verification)
+├── auth/             Sidebase Nuxt Auth configuration
+├── payments/         Stripe integration (opt-in)
+├── e2e/              Playwright E2E tests
 ├── eslint-config/    Shared ESLint config
 └── tsconfig/         Shared TypeScript config
 ```
@@ -75,7 +78,9 @@ packages/
 |---------|-------------|
 | `pnpm dev` | Start all apps |
 | `pnpm build` | Build all apps |
-| `pnpm test` | Run all tests |
+| `pnpm test` | Run all tests (unit) |
+| `pnpm test:e2e` | Run E2E tests with Playwright |
+| `pnpm test:e2e:ui` | Run E2E tests in UI mode |
 | `pnpm lint` | Lint all packages |
 | `docker compose up -d` | Start PostgreSQL + Mailpit |
 | `docker compose down` | Stop services |
@@ -93,6 +98,95 @@ SMTP_PASS=re_xxx
 ```
 
 Works with: Resend, Mailgun, SendGrid, Gmail SMTP, or any SMTP server.
+
+## Authentication
+
+Built-in authentication system with **Sidebase Nuxt Auth** (Auth.js):
+
+**Features:**
+- Email/password authentication with bcrypt hashing
+- Email verification workflow (24-hour token expiry)
+- Password reset flow (1-hour token expiry)
+- OAuth support (GitHub, Google) — opt-in via environment variables
+- JWT session strategy
+- Protected routes with auth middleware
+
+**Auth Pages:**
+- `/auth/login` — Sign in
+- `/auth/register` — Create account
+- `/auth/forgot-password` — Request password reset
+- `/auth/reset-password` — Complete password reset (from email link)
+- `/auth/verify` — Email verification (from email link)
+- `/dashboard` — Protected dashboard example
+
+**Testing the Auth Flow:**
+
+1. Start services: `docker compose up -d`
+2. Register at http://localhost:3000/auth/register
+3. Check Mailpit at http://localhost:8025 for verification email
+4. Click verification link in email
+5. Log in at http://localhost:3000/auth/login
+
+**Security:**
+- Passwords hashed with bcrypt (10 salt rounds)
+- Verification tokens are single-use and expire
+- Password reset tokens expire after 1 hour
+- JWT sessions for stateless authentication
+
+## Payments (Stripe)
+
+**Opt-in feature** — Stripe integration is disabled by default. Enable by setting environment variables:
+
+```bash
+# .env
+STRIPE_SECRET_KEY="sk_test_..."
+STRIPE_WEBHOOK_SECRET="whsec_..."
+NUXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="pk_test_..."
+```
+
+**Features:**
+- Checkout Sessions for one-time payments and subscriptions
+- Customer Portal for subscription management
+- Webhook handler for payment events (auto-updates database)
+- Client-side composable `useStripe()` for easy integration
+
+**Example Pages:**
+- `/dashboard/subscription` — Subscription management demo
+
+**Webhook Setup:**
+1. Create webhook at https://dashboard.stripe.com/webhooks
+2. Point to `https://yourdomain.com/api/stripe/webhook`
+3. Select events: `checkout.session.completed`, `customer.subscription.*`, `invoice.payment_*`
+4. Copy webhook secret to `STRIPE_WEBHOOK_SECRET`
+
+**Database:**
+- Subscription model tracks user subscriptions (status, period, pricing)
+- Auto-synced via webhook events
+
+## Testing
+
+**Unit Tests (Vitest):**
+```bash
+pnpm test                     # Run all unit tests
+pnpm --filter @myturborepo/ui test  # Run UI component tests
+```
+
+**E2E Tests (Playwright):**
+```bash
+pnpm test:e2e                 # Run E2E tests (headless)
+pnpm test:e2e:ui              # Run with Playwright UI
+pnpm test:e2e:headed          # Run with browser visible
+```
+
+**Test Coverage:**
+- Landing page navigation
+- Auth flow (login, register, password reset)
+- Form validation
+- Protected routes
+
+**Before E2E tests:**
+1. Start dev server: `pnpm dev`
+2. Ensure database is running: `docker compose up -d`
 
 ## Deployment
 
