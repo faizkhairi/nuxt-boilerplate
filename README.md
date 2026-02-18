@@ -206,4 +206,4 @@ docker compose -f docker-compose.prod.yml up -d
 
 ## Author
 
-**Faiz Khairi** — [faizkhairi.my](https://faizkhairi.my) — [@faizkhairi](https://github.com/faizkhairi)
+**Faiz Khairi** — [faizkhairi.github.io](https://faizkhairi.github.io) — [@faizkhairi](https://github.com/faizkhairi)
