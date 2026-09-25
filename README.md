@@ -200,6 +200,10 @@ netlify deploy --build
 docker compose -f docker-compose.prod.yml up -d
 ```
 
+## Credits
+
+Based on [gurvancampion/turborepo-nuxt-boilerplate](https://github.com/gurvancampion/turborepo-nuxt-boilerplate) (MIT), extended with auth, database, email, payments, and testing scaffolding.
+
 ## License
 
 [MIT](LICENSE)
