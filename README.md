@@ -1,6 +1,6 @@
 # Nuxt Boilerplate
 
-Production-grade Nuxt 3 monorepo — zero external account dependencies. SaaS-ready scaffold with auth, database, email, UI components, and payments (opt-in).
+Nuxt 3 monorepo starter that needs no third-party SaaS accounts. A scaffold with auth, database, email, UI components, and payments (opt-in).
 
 ## Features
 
