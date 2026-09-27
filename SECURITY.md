@@ -39,4 +39,4 @@ When using this boilerplate, ensure you:
 - Use HTTPS in production
 - Keep dependencies updated (`pnpm audit`, or let Dependabot open the PR)
 - Swap the in-memory rate limiter for a shared store before scaling past one instance
-- Set `TRUSTED_PROXY_COUNT` to match your actual reverse proxy chain
+- Set `TRUSTED_PROXY_COUNT` to match your actual reverse proxy chain (`0` when clients connect directly, so client-written IP headers are ignored)
