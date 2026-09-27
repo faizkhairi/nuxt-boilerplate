@@ -35,10 +35,10 @@ export default defineEventHandler(async (event) => {
       success: true,
       message: "Email verified successfully. You can now sign in.",
     };
-  } catch (error: any) {
+  } catch (error) {
     throw createError({
       statusCode: 400,
-      message: error.message || "Verification failed",
+      message: (error instanceof Error ? error.message : null) || "Verification failed",
     });
   }
 });

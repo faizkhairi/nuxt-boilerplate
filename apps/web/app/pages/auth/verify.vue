@@ -27,8 +27,8 @@ onMounted(async () => {
     })
 
     success.value = true
-  } catch (err: any) {
-    error.value = err.data?.message || 'Email verification failed. The link may have expired.'
+  } catch (err) {
+    error.value = (err as { data?: { message?: string } })?.data?.message || 'Email verification failed. The link may have expired.'
   } finally {
     loading.value = false
   }
@@ -44,7 +44,7 @@ onMounted(async () => {
 
       <UiCard>
         <div v-if="loading" class="flex flex-col items-center justify-center space-y-4 py-8">
-          <div class="h-12 w-12 animate-spin rounded-full border-4 border-gray-200 border-t-blue-600 dark:border-gray-700 dark:border-t-blue-400"></div>
+          <div class="h-12 w-12 animate-spin rounded-full border-4 border-gray-200 border-t-blue-600 dark:border-gray-700 dark:border-t-blue-400"/>
           <p class="text-gray-600 dark:text-gray-400">Verifying your email...</p>
         </div>
 
@@ -57,7 +57,7 @@ onMounted(async () => {
               Your account has been verified. You can now sign in.
             </p>
           </div>
-          <UiButton @click="navigateTo('/auth/login')" class="w-full">
+          <UiButton class="w-full" @click="navigateTo('/auth/login')">
             Go to login
           </UiButton>
         </div>
@@ -72,10 +72,10 @@ onMounted(async () => {
             </p>
           </div>
           <div class="space-y-2">
-            <UiButton @click="navigateTo('/auth/register')" variant="outline" class="w-full">
+            <UiButton variant="outline" class="w-full" @click="navigateTo('/auth/register')">
               Register again
             </UiButton>
-            <UiButton @click="navigateTo('/auth/login')" variant="ghost" class="w-full">
+            <UiButton variant="ghost" class="w-full" @click="navigateTo('/auth/login')">
               Back to login
             </UiButton>
           </div>

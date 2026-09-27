@@ -1,6 +1,5 @@
 import { defineEventHandler, readBody } from "h3";
 import { registerUser } from "../utils/auth";
-import { logAudit } from "../utils/logger";
 import { checkRateLimit, RateLimitPresets } from "../utils/ratelimit";
 
 /**
@@ -50,10 +49,10 @@ export default defineEventHandler(async (event) => {
       message: "Registration successful. Please check your email to verify your account.",
       user,
     };
-  } catch (error: any) {
+  } catch (error) {
     throw createError({
       statusCode: 400,
-      message: error.message || "Registration failed",
+      message: (error instanceof Error ? error.message : null) || "Registration failed",
     });
   }
 });

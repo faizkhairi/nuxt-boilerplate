@@ -19,10 +19,10 @@ export default defineEventHandler(async (event) => {
       success: true,
       message: "If an account exists with that email, a password reset link has been sent.",
     };
-  } catch (error: any) {
+  } catch (error) {
     throw createError({
       statusCode: 400,
-      message: error.message || "Password reset request failed",
+      message: (error instanceof Error ? error.message : null) || "Password reset request failed",
     });
   }
 });

@@ -1,7 +1,7 @@
 # nuxt-boilerplate — AI Development Guide
 
 ## Project Overview
-Production-grade Nuxt 3 Turborepo monorepo with zero external account dependencies. SaaS-ready scaffold with auth, database, email, UI components, and payments (opt-in).
+Production-grade Nuxt 4 Turborepo monorepo with zero external account dependencies. SaaS-ready scaffold with auth, database, email, UI components, and payments (opt-in).
 
 ## Quick Start
 ```bash
@@ -17,7 +17,7 @@ pnpm dev                              # Start all apps
 
 ## Architecture
 ```
-apps/web/           — Nuxt 3 application (SSR, Netlify deployment)
+apps/web/           — Nuxt 4 application (SSR, Netlify deployment)
 apps/docs/          — VitePress documentation site
 packages/ui/        — Shadcn-vue components (Button, Card, Input, Badge, etc.)
 packages/database/  — Prisma ORM + PostgreSQL schema

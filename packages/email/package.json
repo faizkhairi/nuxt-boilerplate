@@ -9,11 +9,16 @@
     "./mailer": "./src/mailer.ts",
     "./templates/*": "./templates/*"
   },
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
   "dependencies": {
-    "nodemailer": "^6.9.0"
+    "nodemailer": "^10.0.10"
   },
   "devDependencies": {
-    "@types/nodemailer": "^6.4.0",
-    "typescript": "^5.0.0"
+    "@myturborepo/tsconfig": "workspace:*",
+    "@types/node": "^24.19.0",
+    "@types/nodemailer": "^8.0.2",
+    "typescript": "~6.0.3"
   }
 }

@@ -1,15 +1,13 @@
 <script setup lang="ts">
-import { useSession } from 'next-auth/react'
-
 definePageMeta({
   layout: false,
 })
 
-const { data: session, status } = useSession()
+const { status } = useAuth()
 
 // Redirect to dashboard if already logged in
 watchEffect(() => {
-  if (status === 'authenticated') {
+  if (status.value === 'authenticated') {
     navigateTo('/dashboard')
   }
 })
@@ -23,14 +21,14 @@ watchEffect(() => {
           Nuxt Boilerplate
         </h1>
         <p class="mb-8 text-xl text-gray-600 dark:text-gray-400">
-          Production-ready Nuxt 3 template with auth, database, email & UI components
+          Production-ready Nuxt 4 template with auth, database, email & UI components
         </p>
 
         <div class="mb-12 flex justify-center gap-4">
-          <UiButton @click="navigateTo('/auth/register')" size="lg">
+          <UiButton size="lg" @click="navigateTo('/auth/register')">
             Get Started
           </UiButton>
-          <UiButton @click="navigateTo('/auth/login')" variant="outline" size="lg">
+          <UiButton variant="outline" size="lg" @click="navigateTo('/auth/login')">
             Sign In
           </UiButton>
         </div>

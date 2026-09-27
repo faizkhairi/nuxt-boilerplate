@@ -118,6 +118,12 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
     return;
   }
 
+  // Current billing period now lives on the subscription item, not the
+  // subscription itself (Stripe API 2025-03-31 and later).
+  const item = subscription.items.data[0];
+  const currentPeriodStart = new Date((item?.current_period_start ?? 0) * 1000);
+  const currentPeriodEnd = new Date((item?.current_period_end ?? 0) * 1000);
+
   // Upsert subscription in database
   await prisma.subscription.upsert({
     where: { userId },
@@ -125,17 +131,17 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
       userId,
       stripeSubscriptionId: subscription.id,
       stripeCustomerId: subscription.customer as string,
-      stripePriceId: subscription.items.data[0]?.price.id || "",
+      stripePriceId: item?.price.id || "",
       status: subscription.status,
-      currentPeriodStart: new Date(subscription.current_period_start * 1000),
-      currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+      currentPeriodStart,
+      currentPeriodEnd,
       cancelAtPeriodEnd: subscription.cancel_at_period_end,
     },
     update: {
       status: subscription.status,
-      stripePriceId: subscription.items.data[0]?.price.id || "",
-      currentPeriodStart: new Date(subscription.current_period_start * 1000),
-      currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+      stripePriceId: item?.price.id || "",
+      currentPeriodStart,
+      currentPeriodEnd,
       cancelAtPeriodEnd: subscription.cancel_at_period_end,
     },
   });

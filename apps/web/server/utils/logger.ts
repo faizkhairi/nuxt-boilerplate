@@ -1,6 +1,6 @@
 import pino from 'pino'
 
-const isDev = process.dev
+const isDev = import.meta.dev
 
 export const logger = pino({
   level: isDev ? 'debug' : 'info',
@@ -24,21 +24,21 @@ export const logger = pino({
 /**
  * Create a child logger with additional context
  */
-export function createLogger(context: Record<string, any>) {
+export function createLogger(context: Record<string, unknown>) {
   return logger.child(context)
 }
 
 /**
  * Log audit events (auth, security, etc.)
  */
-export function logAudit(event: string, data: Record<string, any>) {
+export function logAudit(event: string, data: Record<string, unknown>) {
   logger.info({ audit: true, event, ...data }, `[AUDIT] ${event}`)
 }
 
 /**
  * Log errors with structured data
  */
-export function logError(error: Error, context?: Record<string, any>) {
+export function logError(error: Error, context?: Record<string, unknown>) {
   logger.error(
     {
       error: {

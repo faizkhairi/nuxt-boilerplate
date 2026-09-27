@@ -13,7 +13,7 @@
         <UiButton @click="navigateTo('/')">
           Go Home
         </UiButton>
-        <UiButton variant="outline" @click="navigateTo(-1)">
+        <UiButton variant="outline" @click="$router.back()">
           Go Back
         </UiButton>
       </div>

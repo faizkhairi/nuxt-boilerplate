@@ -17,8 +17,8 @@ const handleSubmit = async () => {
     })
 
     success.value = true
-  } catch (err: any) {
-    error.value = err.data?.message || 'Failed to send reset email. Please try again.'
+  } catch (err) {
+    error.value = (err as { data?: { message?: string } })?.data?.message || 'Failed to send reset email. Please try again.'
   } finally {
     loading.value = false
   }
@@ -42,12 +42,12 @@ const handleSubmit = async () => {
               If an account with that email exists, we've sent a password reset link. Please check your email.
             </p>
           </div>
-          <UiButton @click="navigateTo('/auth/login')" variant="outline" class="w-full">
+          <UiButton variant="outline" class="w-full" @click="navigateTo('/auth/login')">
             Back to login
           </UiButton>
         </div>
 
-        <form v-else @submit.prevent="handleSubmit" class="space-y-4">
+        <form v-else class="space-y-4" @submit.prevent="handleSubmit">
           <div>
             <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
               Email

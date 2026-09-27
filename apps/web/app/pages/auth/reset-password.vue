@@ -44,8 +44,8 @@ const handleSubmit = async () => {
     })
 
     success.value = true
-  } catch (err: any) {
-    error.value = err.data?.message || 'Password reset failed. The link may have expired.'
+  } catch (err) {
+    error.value = (err as { data?: { message?: string } })?.data?.message || 'Password reset failed. The link may have expired.'
   } finally {
     loading.value = false
   }
@@ -69,12 +69,12 @@ const handleSubmit = async () => {
               Password reset successful! You can now sign in with your new password.
             </p>
           </div>
-          <UiButton @click="navigateTo('/auth/login')" class="w-full">
+          <UiButton class="w-full" @click="navigateTo('/auth/login')">
             Go to login
           </UiButton>
         </div>
 
-        <form v-else @submit.prevent="handleSubmit" class="space-y-4">
+        <form v-else class="space-y-4" @submit.prevent="handleSubmit">
           <div>
             <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
               New Password

@@ -4,14 +4,16 @@
   "private": true,
   "main": "./nuxt.config.ts",
   "dependencies": {
-    "@sidebase/nuxt-auth": "^0.9.4",
-    "@auth/prisma-adapter": "^2.7.2",
-    "bcrypt": "^5.1.1",
-    "next-auth": "4.21.1"
+    "@sidebase/nuxt-auth": "1.4.0",
+    "@auth/prisma-adapter": "^2.11.3",
+    "bcrypt": "^6.0.0",
+    "next-auth": "4.24.15"
   },
   "devDependencies": {
-    "@types/bcrypt": "^5.0.2",
+    "@types/bcrypt": "^6.0.0",
     "@myturborepo/database": "workspace:*",
-    "@myturborepo/email": "workspace:*"
+    "@myturborepo/email": "workspace:*",
+    "@myturborepo/tsconfig": "workspace:*",
+    "typescript": "~6.0.3"
   }
 }

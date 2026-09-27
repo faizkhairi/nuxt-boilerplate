@@ -6,7 +6,7 @@ export default {
     nav: [
       { text: 'Index', link: '/index' },
       { text: 'Getting started', link: '/getting-started' },
-      { text: 'Github', link: 'https://' },
+      { text: 'Github', link: 'https://github.com/faizkhairi/nuxt-boilerplate' },
     ],
     sidebar: [
       {

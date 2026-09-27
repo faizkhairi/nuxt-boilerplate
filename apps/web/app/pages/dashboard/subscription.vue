@@ -1,17 +1,16 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useSession, signOut } from 'next-auth/react'
-import { useStripe } from '@myturborepo/payments/composables/useStripe'
+import { useStripe, type SubscriptionStatus } from '@myturborepo/payments/composables/useStripe'
 
-const { data: session, status } = useSession()
+const { data: session, status, signOut } = useAuth()
 const { loading, error, createCheckout, openPortal, getSubscription } = useStripe()
 
 // Redirect to login if not authenticated
-if (status === 'unauthenticated') {
+if (status.value === 'unauthenticated') {
   await navigateTo('/auth/login')
 }
 
-const subscription = ref<any>(null)
+const subscription = ref<SubscriptionStatus | null>(null)
 const loadingSubscription = ref(true)
 
 // Example pricing tiers - Replace with your actual Stripe Price IDs
@@ -80,7 +79,7 @@ onMounted(async () => {
             <span class="text-sm text-gray-700 dark:text-gray-300">
               {{ session?.user?.name || session?.user?.email }}
             </span>
-            <UiButton @click="handleSignOut" variant="outline" size="sm">
+            <UiButton variant="outline" size="sm" @click="handleSignOut">
               Sign out
             </UiButton>
           </div>
@@ -95,7 +94,7 @@ onMounted(async () => {
           Current Subscription
         </h2>
 
-        <UiCard v-if="subscription?.hasSubscription">
+        <UiCard v-if="subscription?.hasSubscription && subscription.subscription">
           <div class="space-y-4">
             <div class="flex items-center justify-between">
               <div>
@@ -108,7 +107,7 @@ onMounted(async () => {
                   </UiBadge>
                 </p>
               </div>
-              <UiButton @click="handleManageSubscription" :disabled="loading">
+              <UiButton :disabled="loading" @click="handleManageSubscription">
                 {{ loading ? 'Loading...' : 'Manage Subscription' }}
               </UiButton>
             </div>
@@ -164,7 +163,7 @@ onMounted(async () => {
                 </li>
               </ul>
 
-              <UiButton @click="handleSubscribe(plan.priceId)" :disabled="loading" class="w-full">
+              <UiButton :disabled="loading" class="w-full" @click="handleSubscribe(plan.priceId)">
                 {{ loading ? 'Loading...' : 'Subscribe' }}
               </UiButton>
             </div>

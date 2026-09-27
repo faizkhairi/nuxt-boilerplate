@@ -39,7 +39,7 @@ const props = defineProps<{
   error: NuxtError
 }>()
 
-const isDev = process.dev
+const isDev = import.meta.dev
 
 const errorTitle = computed(() => {
   const statusCode = props.error.statusCode || 500

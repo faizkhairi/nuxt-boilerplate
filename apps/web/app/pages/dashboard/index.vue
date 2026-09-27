@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { useSession, signOut } from 'next-auth/react'
-
-const { data: session, status } = useSession()
+const { data: session, status, signOut } = useAuth()
 
 // Redirect to login if not authenticated
-if (status === 'unauthenticated') {
+if (status.value === 'unauthenticated') {
   await navigateTo('/auth/login')
 }
 
@@ -25,7 +23,7 @@ const handleSignOut = async () => {
             <span class="text-sm text-gray-700 dark:text-gray-300">
               {{ session?.user?.name || session?.user?.email }}
             </span>
-            <UiButton @click="handleSignOut" variant="outline" size="sm">
+            <UiButton variant="outline" size="sm" @click="handleSignOut">
               Sign out
             </UiButton>
           </div>
@@ -87,7 +85,7 @@ const handleSignOut = async () => {
         <UiCard>
           <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Getting Started</h3>
           <div class="mt-4 space-y-2 text-sm text-gray-600 dark:text-gray-400">
-            <p>Welcome to your dashboard! This is a production-ready Nuxt 3 boilerplate with:</p>
+            <p>Welcome to your dashboard! This is a production-ready Nuxt 4 boilerplate with:</p>
             <ul class="ml-4 list-disc space-y-1">
               <li>Auth with Sidebase Nuxt Auth</li>
               <li>Prisma ORM + PostgreSQL</li>

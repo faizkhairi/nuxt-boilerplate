@@ -27,7 +27,7 @@ definePageMeta({
 })
 
 const reloadPage = () => {
-  if (process.client) {
+  if (import.meta.client) {
     window.location.reload()
   }
 }
