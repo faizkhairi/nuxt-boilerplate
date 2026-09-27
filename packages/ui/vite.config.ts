@@ -12,5 +12,11 @@ export default defineConfig({
     include: ['tests/**/*.test.ts'],
     globals: true,
     environment: 'jsdom',
+    coverage: {
+      provider: 'v8',
+      include: ['components/**/*.{vue,ts}', 'lib/**/*.ts'],
+      // Floors: measured coverage rounded down to the nearest 5%
+      thresholds: { statements: 95, branches: 100, functions: 80, lines: 95 },
+    },
   },
 })

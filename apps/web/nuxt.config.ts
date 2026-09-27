@@ -21,9 +21,21 @@ export default defineNuxtConfig({
       isEnabled: false,
     },
   },
+  // Nuxt already turns on strict and noUncheckedIndexedAccess; these add the
+  // unused-code checks the other packages get from @myturborepo/tsconfig.
+  typescript: {
+    tsConfig: {
+      compilerOptions: { noUnusedLocals: true, noUnusedParameters: true },
+    },
+  },
   nitro: {
     // Netlify by default; CI's e2e job builds with NITRO_PRESET=node-server
     preset: process.env.NITRO_PRESET || 'netlify',
+    typescript: {
+      tsConfig: {
+        compilerOptions: { noUnusedLocals: true, noUnusedParameters: true },
+      },
+    },
   },
   runtimeConfig: {
     // Server-only env vars (not exposed to client)

@@ -1,0 +1,16 @@
+{
+  // Typechecks the unit tests against the same server types Nitro generates.
+  // Run by `pnpm typecheck` in apps/web after `nuxt typecheck`.
+  "extends": "../../.nuxt/tsconfig.server.json",
+  "compilerOptions": {
+    "noEmit": true
+  },
+  "include": [
+    "../../.nuxt/types/nitro-nuxt.d.ts",
+    "../../.nuxt/types/nitro.d.ts",
+    "../../server/**/*",
+    "../../shared/**/*.d.ts",
+    "./**/*.ts",
+    "../../vitest.config.ts"
+  ]
+}

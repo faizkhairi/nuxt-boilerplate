@@ -12,9 +12,9 @@ test.describe('Landing Page', () => {
     await expect(page.getByRole('button', { name: 'Sign In' })).toBeVisible();
 
     // Check feature cards
-    await expect(page.getByText('Auth Ready')).toBeVisible();
-    await expect(page.getByText('UI Components')).toBeVisible();
-    await expect(page.getByText('Email Built-in')).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Auth Ready/ })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /UI Components/ })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Email Built-in/ })).toBeVisible();
   });
 
   test('should navigate to register page when clicking Get Started', async ({ page }) => {

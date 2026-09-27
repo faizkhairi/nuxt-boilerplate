@@ -8,6 +8,13 @@ on:
       - '*'
   pull_request:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   PATH_BUILD_DOCS: ./apps/docs/pages/.vitepress/dist
   PATH_BUILD_WEB: ./apps/web/dist
@@ -19,30 +26,170 @@ env:
     ./apps/web/dist
     ./packages/ui/.histoire/dist
   CACHE_KEY_BUILD: build-${{ github.sha }}
+  # Dummy values so the app can build and boot without real secrets. None of
+  # them reach a real external service.
+  DATABASE_URL: postgresql://postgres:postgres@localhost:5432/nuxt_boilerplate
+  NUXT_AUTH_SECRET: build-secret-32-characters-long-for-ci
+  NUXT_PUBLIC_APP_URL: http://localhost:3000
+  SMTP_HOST: localhost
+  SMTP_PORT: 1025
 # To use Remote Caching, uncomment the next lines and follow the steps below.
 #  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
 #  TURBO_TEAM: ${{ secrets.TURBO_TEAM }}
 
 jobs:
-  build:
-    name: Build 🏗️
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
-
+    timeout-minutes: 10
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup
         uses: ./.github/workflows/setup
 
+      - name: Lint
+        run: pnpm lint
+
+      - name: Check for em dashes
+        run: bash .github/scripts/check-dashes.sh
+
+  typecheck:
+    name: Typecheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup
+        uses: ./.github/workflows/setup
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup
+        uses: ./.github/workflows/setup
+
+      - name: Unit tests with coverage
+        run: pnpm test
+
+  build:
+    name: Build (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        node: [22, 24]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup
+        uses: ./.github/workflows/setup
+        with:
+          node-version: ${{ matrix.node }}
+
       - name: Build
         run: pnpm build
 
+      # The tag-gated deploy jobs below restore this cache.
       - name: Cache build
+        if: matrix.node == 24
         uses: actions/cache@v4
         with:
           path: ${{ env.CACHE_PATHS_BUILD }}
           key: ${{ env.CACHE_KEY_BUILD }}
+
+  audit:
+    name: Dependency audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup
+        uses: ./.github/workflows/setup
+
+      - name: Audit dependencies (high and critical)
+        run: pnpm audit --audit-level=high
+
+  secrets:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Run gitleaks
+        uses: gitleaks/gitleaks-action@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  e2e:
+    name: E2E (Playwright)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: nuxt_boilerplate
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup
+        uses: ./.github/workflows/setup
+
+      - name: Push database schema
+        run: pnpm --filter @myturborepo/database db:push
+
+      - name: Install Playwright browsers
+        run: pnpm --filter @myturborepo/e2e exec playwright install --with-deps chromium
+
+      # The default preset targets Netlify; the e2e suite needs a server it
+      # can start with plain node.
+      - name: Build web app (node server)
+        run: pnpm --filter @myturborepo/web build
+        env:
+          NITRO_PRESET: node-server
+
+      - name: Run Playwright tests
+        run: pnpm --filter @myturborepo/e2e exec playwright test --project=chromium
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: packages/e2e/playwright-report
+          retention-days: 7
 
   deploy-docs-main:
     name: Deploy docs from main branch 🚀

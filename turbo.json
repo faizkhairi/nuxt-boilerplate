@@ -1,16 +1,23 @@
 {
   "$schema": "https://turborepo.com/schema.json",
+  "globalDependencies": [
+    "packages/tsconfig/*.json"
+  ],
   "tasks": {
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": [
+        "^build"
+      ],
       "outputs": [
         "dist/**",
         ".output/**",
         "**/.vitepress/dist/**"
       ]
     },
-    "generate" : {
-      "dependsOn": ["^generate"],
+    "generate": {
+      "dependsOn": [
+        "^generate"
+      ],
       "outputs": [
         "dist/**",
         ".output/**"
