@@ -1,5 +1,5 @@
 // =============================================================================
-// Prisma Schema — nuxt-boilerplate
+// Prisma Schema: nuxt-boilerplate
 // =============================================================================
 // Models designed for Auth.js (NextAuth/Sidebase) + SaaS features.
 // Run `pnpm db:push` to sync with database, `pnpm db:migrate` for migrations.

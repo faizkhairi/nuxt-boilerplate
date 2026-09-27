@@ -21,7 +21,7 @@ watchEffect(() => {
           Nuxt Boilerplate
         </h1>
         <p class="mb-8 text-xl text-gray-600 dark:text-gray-400">
-          Production-ready Nuxt 4 template with auth, database, email & UI components
+          Nuxt 4 starter with auth, database, email & UI components
         </p>
 
         <div class="mb-12 flex justify-center gap-4">

@@ -60,7 +60,7 @@ export default NuxtAuthHandler({
       },
     }),
 
-    // GitHub OAuth (optional — only if env vars are set)
+    // GitHub OAuth (optional, only if env vars are set)
     ...(process.env.NUXT_OAUTH_GITHUB_CLIENT_ID &&
     process.env.NUXT_OAUTH_GITHUB_CLIENT_SECRET
       ? [
@@ -72,7 +72,7 @@ export default NuxtAuthHandler({
         ]
       : []),
 
-    // Google OAuth (optional — only if env vars are set)
+    // Google OAuth (optional, only if env vars are set)
     ...(process.env.NUXT_OAUTH_GOOGLE_CLIENT_ID &&
     process.env.NUXT_OAUTH_GOOGLE_CLIENT_SECRET
       ? [
