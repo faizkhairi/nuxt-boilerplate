@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import { prisma } from "@myturborepo/database";
 import { sendEmail, verificationEmail, passwordResetEmail, welcomeEmail } from "@myturborepo/email";
 import crypto from "crypto";
+import { logError } from "./logger";
 
 const SALT_ROUNDS = 10;
 
@@ -54,12 +55,22 @@ export async function registerUser(data: {
   const verifyUrl = `${appUrl}/auth/verify?token=${token}&email=${encodeURIComponent(user.email)}`;
 
   const emailTemplate = verificationEmail(verifyUrl);
-  await sendEmail({
-    to: user.email,
-    subject: emailTemplate.subject,
-    html: emailTemplate.html,
-    text: emailTemplate.text,
-  });
+  try {
+    await sendEmail({
+      to: user.email,
+      subject: emailTemplate.subject,
+      html: emailTemplate.html,
+      text: emailTemplate.text,
+    });
+  } catch (error) {
+    // The account already exists at this point, so a mail outage must not
+    // turn the response into a failure the client would retry into
+    // "User already exists". Log it and let the user sign in unverified.
+    logError(error instanceof Error ? error : new Error(String(error)), {
+      context: "registerUser.sendVerificationEmail",
+      userId: user.id,
+    });
+  }
 
   return { id: user.id, email: user.email, name: user.name };
 }

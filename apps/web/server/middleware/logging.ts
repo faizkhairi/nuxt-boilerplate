@@ -7,15 +7,15 @@ import { logRequest } from '../utils/logger'
  * Logs all HTTP requests with method, URL, status code, and duration.
  * Runs for all API routes and server-rendered pages.
  */
-export default defineEventHandler(async (event) => {
+export default defineEventHandler((event) => {
   const startTime = Date.now()
 
   // Get request details
   const method = event.node.req.method || 'GET'
   const url = event.node.req.url || '/'
 
-  // Wait for the response
-  await event.node.res.on('finish', () => {
+  // Log once the response has been sent; the handler itself returns at once
+  event.node.res.on('finish', () => {
     const duration = Date.now() - startTime
     const statusCode = event.node.res.statusCode
 

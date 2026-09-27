@@ -1,7 +1,11 @@
 import { defineEventHandler, readBody } from "h3";
 import { requestPasswordReset } from "../utils/auth";
+import { enforceRateLimit, RateLimitPresets } from "../utils/ratelimit";
 
 export default defineEventHandler(async (event) => {
+  // 5 requests per minute per client IP
+  enforceRateLimit(event, RateLimitPresets.auth, "forgot-password");
+
   const body = await readBody(event);
 
   const { email } = body;
