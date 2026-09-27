@@ -14,6 +14,8 @@ export default defineConfig({
         'server/api/health.get.ts',
         'server/api/register.post.ts',
       ],
+      // Floors: measured coverage rounded down to the nearest 5%
+      thresholds: { statements: 95, branches: 80, functions: 90, lines: 95 },
     },
   },
 })

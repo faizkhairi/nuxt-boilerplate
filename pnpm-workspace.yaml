@@ -29,4 +29,4 @@ overrides:
 # (GHSA-7rqj-j65f-68wh, fixed in 4.24.15), so the patch only re-exposes the
 # `core` folder that 4.24.15 still ships. Drop it once sidebase supports 4.24.
 patchedDependencies:
-  next-auth@4.24.15: patches/next-auth@4.24.15.patch
+  next-auth: patches/next-auth.patch
