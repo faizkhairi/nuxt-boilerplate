@@ -12,6 +12,8 @@ export default defineNuxtModule({
       dirs.push({
         path: join(__dirname, 'components'),
         prefix: 'Ui',
+        // Only the .vue files; each folder's index.ts barrel is not a component
+        extensions: ['vue'],
         pathPrefix: false,
         global: true,
       })

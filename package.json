@@ -1,7 +1,7 @@
 {
   "name": "nuxt-boilerplate",
   "version": "1.0.0",
-  "description": "Nuxt 3 full-stack starter: Auth, Prisma, shadcn-vue, email templates, Stripe (opt-in), Docker Compose, and CI/CD. No third-party SaaS accounts required.",
+  "description": "Nuxt 4 full-stack starter: Auth, Prisma, shadcn-vue, email templates, Stripe (opt-in), Docker Compose, and CI/CD. No third-party SaaS accounts required.",
   "author": "Faiz Khairi <ifaizkhairi@gmail.com> (https://faizkhairi.github.io)",
   "license": "MIT",
   "private": true,
@@ -18,16 +18,16 @@
     "test": "turbo run test",
     "test:e2e": "pnpm --filter @myturborepo/e2e test",
     "test:e2e:ui": "pnpm --filter @myturborepo/e2e test:ui",
-    "test:e2e:headed": "pnpm --filter @myturborepo/e2e test:headed"
+    "test:e2e:headed": "pnpm --filter @myturborepo/e2e test:headed",
+    "typecheck": "turbo run typecheck"
   },
   "devDependencies": {
-    "@myturborepo/eslint-config-custom": "workspace:*",
-    "@release-it/conventional-changelog": "^5.1.1",
-    "release-it": "^15.10.3",
-    "turbo": "latest"
+    "@release-it/conventional-changelog": "^12.0.2",
+    "release-it": "^21.1.0",
+    "turbo": "^2.11.4"
   },
   "engines": {
-    "node": ">=v18.16.0"
+    "node": ">=22.13.0"
   },
-  "packageManager": "pnpm@7.32.5"
+  "packageManager": "pnpm@12.6.0"
 }

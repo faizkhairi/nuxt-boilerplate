@@ -19,10 +19,10 @@ export default defineEventHandler(async (event) => {
       success: true,
       message: "Password reset successful. You can now sign in with your new password.",
     };
-  } catch (error: any) {
+  } catch (error) {
     throw createError({
       statusCode: 400,
-      message: error.message || "Password reset failed",
+      message: (error instanceof Error ? error.message : null) || "Password reset failed",
     });
   }
 });

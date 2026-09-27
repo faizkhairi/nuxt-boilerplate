@@ -1,5 +1,21 @@
 import { ref } from "vue";
 
+/** Response of POST /api/stripe/create-checkout and /api/stripe/create-portal. */
+export interface RedirectResponse {
+  url: string | null;
+}
+
+/** Response of GET /api/subscription. */
+export interface SubscriptionStatus {
+  hasSubscription: boolean;
+  isActive?: boolean;
+  subscription: {
+    status: string;
+    currentPeriodEnd: string;
+    cancelAtPeriodEnd: boolean;
+  } | null;
+}
+
 export function useStripe() {
   const loading = ref(false);
   const error = ref<string | null>(null);
@@ -16,7 +32,7 @@ export function useStripe() {
     error.value = null;
 
     try {
-      const response = await $fetch("/api/stripe/create-checkout", {
+      const response = await $fetch<RedirectResponse>("/api/stripe/create-checkout", {
         method: "POST",
         body: {
           priceId: params.priceId,
@@ -47,7 +63,7 @@ export function useStripe() {
     error.value = null;
 
     try {
-      const response = await $fetch("/api/stripe/create-portal", {
+      const response = await $fetch<RedirectResponse>("/api/stripe/create-portal", {
         method: "POST",
       });
 
@@ -73,7 +89,7 @@ export function useStripe() {
     error.value = null;
 
     try {
-      const response = await $fetch("/api/subscription");
+      const response = await $fetch<SubscriptionStatus>("/api/subscription");
       return response;
     } catch (err: any) {
       error.value = err.data?.message || "Failed to fetch subscription";

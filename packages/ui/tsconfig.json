@@ -1,5 +1,9 @@
 {
   "extends": "@myturborepo/tsconfig/histoire.json",
+  "compilerOptions": {
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "types": ["node", "vitest/globals"]
+  },
   "include": [
     "env.d.ts",
     "./**/*",

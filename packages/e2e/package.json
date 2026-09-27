@@ -8,10 +8,13 @@
     "test:ui": "playwright test --ui",
     "test:headed": "playwright test --headed",
     "test:debug": "playwright test --debug",
-    "test:report": "playwright show-report"
+    "test:report": "playwright show-report",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "devDependencies": {
-    "@playwright/test": "^1.49.1",
-    "@myturborepo/tsconfig": "workspace:*"
+    "@playwright/test": "^1.63.0",
+    "@myturborepo/tsconfig": "workspace:*",
+    "@types/node": "^24.19.0",
+    "typescript": "~6.0.3"
   }
 }

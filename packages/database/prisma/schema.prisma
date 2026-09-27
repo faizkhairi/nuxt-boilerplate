@@ -5,12 +5,12 @@
 // Run `pnpm db:push` to sync with database, `pnpm db:migrate` for migrations.
 
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 // =============================================================================

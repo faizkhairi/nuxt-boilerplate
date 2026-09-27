@@ -4,14 +4,15 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./server/*": "./server/*",
-    "./composables/*": "./composables/*"
+    "./server/*": "./server/*.ts",
+    "./composables/*": "./composables/*.ts"
   },
   "dependencies": {
-    "stripe": "^17.5.0",
+    "stripe": "^22.6.2",
     "@myturborepo/database": "workspace:*"
   },
   "devDependencies": {
-    "@myturborepo/tsconfig": "workspace:*"
+    "@myturborepo/tsconfig": "workspace:*",
+    "@types/node": "^24.19.0"
   }
 }

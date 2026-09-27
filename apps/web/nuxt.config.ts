@@ -1,13 +1,19 @@
-// https://v3.nuxtjs.org/api/configuration/nuxt.config
+// https://nuxt.com/docs/api/configuration/nuxt-config
+import tailwindcss from '@tailwindcss/vite'
+
 export default defineNuxtConfig({
   modules: [
     '@myturborepo/ui',
-    '@nuxtjs/tailwindcss',
     '@sidebase/nuxt-auth',
+    '@nuxt/eslint',
   ],
+  css: ['~/assets/css/main.css'],
+  vite: {
+    plugins: [tailwindcss()],
+  },
   auth: {
     isEnabled: true,
-    baseURL: process.env.NUXT_PUBLIC_APP_URL || 'http://localhost:3000',
+    baseURL: `${process.env.NUXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/auth`,
     provider: {
       type: 'authjs',
     },
@@ -17,10 +23,6 @@ export default defineNuxtConfig({
   },
   nitro: {
     preset: 'netlify',
-  },
-  tailwindcss: {
-    configPath: './tailwind.config.ts',
-    cssPath: './assets/css/main.css',
   },
   runtimeConfig: {
     // Server-only env vars (not exposed to client)

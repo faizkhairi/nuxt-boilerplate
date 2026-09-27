@@ -28,7 +28,7 @@ const handleRegister = async () => {
   }
 
   try {
-    const response = await $fetch('/api/register', {
+    await $fetch('/api/register', {
       method: 'POST',
       body: {
         name: name.value,
@@ -38,8 +38,8 @@ const handleRegister = async () => {
     })
 
     success.value = true
-  } catch (err: any) {
-    error.value = err.data?.message || 'Registration failed. Please try again.'
+  } catch (err) {
+    error.value = (err as { data?: { message?: string } })?.data?.message || 'Registration failed. Please try again.'
   } finally {
     loading.value = false
   }
@@ -61,12 +61,12 @@ const handleRegister = async () => {
               Account created successfully! Please check your email to verify your account.
             </p>
           </div>
-          <UiButton @click="navigateTo('/auth/login')" class="w-full">
+          <UiButton class="w-full" @click="navigateTo('/auth/login')">
             Go to login
           </UiButton>
         </div>
 
-        <form v-else @submit.prevent="handleRegister" class="space-y-4">
+        <form v-else class="space-y-4" @submit.prevent="handleRegister">
           <div>
             <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
               Name

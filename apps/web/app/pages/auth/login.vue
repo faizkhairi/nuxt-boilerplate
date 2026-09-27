@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { signIn } from 'next-auth/react'
+
+const { signIn } = useAuth()
 
 const email = ref('')
 const password = ref('')
@@ -24,8 +25,8 @@ const handleLogin = async () => {
       // Redirect to dashboard on success
       await navigateTo('/dashboard')
     }
-  } catch (err: any) {
-    error.value = err.message || 'Login failed'
+  } catch (err) {
+    error.value = (err instanceof Error ? err.message : null) || 'Login failed'
   } finally {
     loading.value = false
   }
@@ -49,7 +50,7 @@ const handleGoogleLogin = async () => {
       </div>
 
       <UiCard>
-        <form @submit.prevent="handleLogin" class="space-y-4">
+        <form class="space-y-4" @submit.prevent="handleLogin">
           <div>
             <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
               Email
@@ -96,7 +97,7 @@ const handleGoogleLogin = async () => {
         <div class="mt-6">
           <div class="relative">
             <div class="absolute inset-0 flex items-center">
-              <div class="w-full border-t border-gray-300 dark:border-gray-700"></div>
+              <div class="w-full border-t border-gray-300 dark:border-gray-700"/>
             </div>
             <div class="relative flex justify-center text-sm">
               <span class="bg-white px-2 text-gray-500 dark:bg-gray-800 dark:text-gray-400">Or continue with</span>
@@ -104,10 +105,10 @@ const handleGoogleLogin = async () => {
           </div>
 
           <div class="mt-6 grid grid-cols-2 gap-3">
-            <UiButton variant="outline" @click="handleGitHubLogin" type="button">
+            <UiButton variant="outline" type="button" @click="handleGitHubLogin">
               GitHub
             </UiButton>
-            <UiButton variant="outline" @click="handleGoogleLogin" type="button">
+            <UiButton variant="outline" type="button" @click="handleGoogleLogin">
               Google
             </UiButton>
           </div>

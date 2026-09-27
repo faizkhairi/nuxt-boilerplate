@@ -1,10 +1,10 @@
 # Nuxt Boilerplate
 
-Nuxt 3 monorepo starter that needs no third-party SaaS accounts. A scaffold with auth, database, email, UI components, and payments (opt-in).
+Nuxt 4 monorepo starter that needs no third-party SaaS accounts. A scaffold with auth, database, email, UI components, and payments (opt-in).
 
 ## Features
 
-- **Nuxt 3** with SSR, file-based routing, and Nitro server
+- **Nuxt 4** with SSR, file-based routing, and Nitro server
 - **Shadcn-vue + Tailwind CSS** — copy-paste UI components with dark mode
 - **Prisma ORM + PostgreSQL** — type-safe database with migrations
 - **Nodemailer** — SMTP-agnostic email with pre-built templates
@@ -45,7 +45,7 @@ pnpm dev
 
 ```
 apps/
-├── web/              Nuxt 3 application
+├── web/              Nuxt 4 application
 └── docs/             VitePress documentation
 
 packages/
@@ -55,7 +55,6 @@ packages/
 ├── auth/             Sidebase Nuxt Auth configuration
 ├── payments/         Stripe integration (opt-in)
 ├── e2e/              Playwright E2E tests
-├── eslint-config/    Shared ESLint config
 └── tsconfig/         Shared TypeScript config
 ```
 
@@ -63,7 +62,7 @@ packages/
 
 | Concern | Technology | External Account? |
 |---------|-----------|-------------------|
-| Framework | Nuxt 3 (Vue 3, Nitro) | No |
+| Framework | Nuxt 4 (Vue 3, Nitro) | No |
 | UI | Shadcn-vue + Tailwind CSS | No |
 | Database | Prisma + PostgreSQL (Docker) | No |
 | Email | Nodemailer + Mailpit (dev) | No |

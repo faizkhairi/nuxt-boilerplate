@@ -1,5 +1,5 @@
 {
-  "$schema": "https://turborepo.org/schema.json",
+  "$schema": "https://turborepo.com/schema.json",
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
@@ -26,6 +26,9 @@
       "cache": false
     },
     "test": {
+      "outputs": []
+    },
+    "typecheck": {
       "outputs": []
     }
   }

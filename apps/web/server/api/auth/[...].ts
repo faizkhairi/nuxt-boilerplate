@@ -27,7 +27,7 @@ export default NuxtAuthHandler({
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials: any) {
+      async authorize(credentials: Record<"email" | "password", string> | undefined) {
         if (!credentials?.email || !credentials?.password) {
           throw new Error("Email and password required");
         }
@@ -54,6 +54,8 @@ export default NuxtAuthHandler({
           email: user.email,
           name: user.name,
           image: user.image,
+          role: user.role,
+          emailVerified: user.emailVerified,
         };
       },
     }),
@@ -62,7 +64,7 @@ export default NuxtAuthHandler({
     ...(process.env.NUXT_OAUTH_GITHUB_CLIENT_ID &&
     process.env.NUXT_OAUTH_GITHUB_CLIENT_SECRET
       ? [
-          // @ts-expect-error
+          // @ts-expect-error You need to use .default here for it to work during SSR. May be fixed via Vite at some point
           GithubProvider.default({
             clientId: process.env.NUXT_OAUTH_GITHUB_CLIENT_ID,
             clientSecret: process.env.NUXT_OAUTH_GITHUB_CLIENT_SECRET,
@@ -74,7 +76,7 @@ export default NuxtAuthHandler({
     ...(process.env.NUXT_OAUTH_GOOGLE_CLIENT_ID &&
     process.env.NUXT_OAUTH_GOOGLE_CLIENT_SECRET
       ? [
-          // @ts-expect-error
+          // @ts-expect-error You need to use .default here for it to work during SSR. May be fixed via Vite at some point
           GoogleProvider.default({
             clientId: process.env.NUXT_OAUTH_GOOGLE_CLIENT_ID,
             clientSecret: process.env.NUXT_OAUTH_GOOGLE_CLIENT_SECRET,
@@ -84,17 +86,20 @@ export default NuxtAuthHandler({
   ],
 
   callbacks: {
-    async jwt({ token, user, account }) {
+    async jwt({ token, user }) {
       if (user) {
+        const signedIn = user as { role?: string; emailVerified?: Date | null };
         token.id = user.id;
-        token.role = (user as any).role || "USER";
+        token.role = signedIn.role || "USER";
+        token.emailVerified = Boolean(signedIn.emailVerified);
       }
       return token;
     },
     async session({ session, token }) {
       if (session.user) {
-        (session.user as any).id = token.id;
-        (session.user as any).role = token.role;
+        session.user.id = token.id as string | undefined;
+        session.user.role = token.role as string | undefined;
+        session.user.emailVerified = token.emailVerified === true;
       }
       return session;
     },
