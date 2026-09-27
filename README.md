@@ -85,7 +85,7 @@ All variables are documented with placeholders in `.env.example`.
 | `STRIPE_SECRET_KEY` | Optional | Enables Stripe checkout and subscription management |
 | `STRIPE_WEBHOOK_SECRET` | Optional | Verifies incoming Stripe webhook signatures |
 | `NUXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Optional | Client-side Stripe publishable key |
-| `TRUSTED_PROXY_COUNT` | Optional | Reverse proxies in front of the app that append to `X-Forwarded-For` (default `1`); sets which entry the rate limiter trusts as the client IP |
+| `TRUSTED_PROXY_COUNT` | Optional | Reverse proxies in front of the app that append to `X-Forwarded-For` (default `1`); sets which entry the rate limiter trusts as the client IP. `0` means no proxy: IP headers are ignored and the socket address is used |
 | `NITRO_PRESET` | Optional | Overrides the Nitro deployment preset (default `netlify`); set to `node-server` for self-hosting or the E2E suite |
 
 ## Scripts
@@ -186,7 +186,7 @@ nuxt-boilerplate/
 ## Security
 
 - **Headers and CSP**: `apps/web/server/middleware/security-headers.ts` sets a Content-Security-Policy plus `X-Content-Type-Options`, `Referrer-Policy`, `X-Frame-Options`, `Permissions-Policy`, and (outside development) `Strict-Transport-Security` on every response. The CSP keeps `script-src 'unsafe-inline'` because Nuxt's server render inlines a small script that sets `window.__NUXT__`; dropping it needs a per-request nonce threaded through the [nuxt-security](https://nuxt-security.vercel.app) module, an extra dependency this boilerplate deliberately does not add.
-- **Rate limiting**: `apps/web/server/utils/ratelimit.ts` is an in-memory, per-instance limiter. It reads the client IP as the `X-Forwarded-For` entry `TRUSTED_PROXY_COUNT` hops from the right (default `1`, one reverse proxy), not the spoofable leftmost entry. `apps/web/server/middleware/signin-rate-limit.ts` applies it to the credentials sign-in callback. The store resets on restart and does not coordinate across instances: swap it for a shared store (for example Redis) before running more than one instance.
+- **Rate limiting**: `apps/web/server/utils/ratelimit.ts` is an in-memory, per-instance limiter. It reads the client IP as the `X-Forwarded-For` entry `TRUSTED_PROXY_COUNT` hops from the right (default `1`, one reverse proxy), not the spoofable leftmost entry. With no proxy in front, set `TRUSTED_PROXY_COUNT=0` so it ignores IP headers and keys on the socket address. `apps/web/server/middleware/signin-rate-limit.ts` applies it to the credentials sign-in callback. The store resets on restart and does not coordinate across instances: swap it for a shared store (for example Redis) before running more than one instance.
 - **Health check**: `GET /api/health` runs a cheap `SELECT 1` against the database and returns `503` if it fails, for monitoring and load balancers.
 - **The next-auth patch**: `@sidebase/nuxt-auth` 1.4 imports `next-auth/core`, which next-auth stopped exporting after 4.21. Staying on 4.21 ships a critical advisory (GHSA-7rqj-j65f-68wh, fixed in 4.24.15), so `patches/next-auth.patch` re-exposes the `core` folder that 4.24.15 still ships. It is applied automatically via `pnpm-workspace.yaml`'s `patchedDependencies`. Remove it once sidebase supports next-auth 4.24 natively.
 - **Dependency overrides**: `pnpm-workspace.yaml` pins `vitepress`'s transitive `vite`, `deepmerge-ts`, and `mysql2` past known advisories that would otherwise ship through Prisma's CLI or the docs app's dev server.

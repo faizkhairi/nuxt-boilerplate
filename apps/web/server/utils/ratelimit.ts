@@ -101,7 +101,7 @@ export function resetRateLimitStore(): void {
 
 function trustedProxyCount(): number {
   const parsed = Number.parseInt(process.env.TRUSTED_PROXY_COUNT ?? '', 10)
-  return Number.isInteger(parsed) && parsed > 0 ? parsed : 1
+  return Number.isInteger(parsed) && parsed >= 0 ? parsed : 1
 }
 
 function headerValue(value: string | string[] | undefined): string | undefined {
@@ -120,9 +120,13 @@ function headerValue(value: string | string[] | undefined): string | undefined {
  *
  * X-Real-IP is used only when X-Forwarded-For is absent (proxies that set just
  * that header). With neither header, the socket address is used.
+ *
+ * TRUSTED_PROXY_COUNT=0 means no proxy: every IP header is client-written, so
+ * both are ignored and only the socket address counts.
  */
 export function getClientIP(event: H3Event): string | undefined {
   const headers = event.node.req.headers
+  if (trustedProxyCount() === 0) return event.node.req.socket?.remoteAddress
 
   const forwardedFor = headerValue(headers['x-forwarded-for'])
   if (forwardedFor) {

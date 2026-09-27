@@ -63,6 +63,37 @@ describe('getClientIP', () => {
     expect(getClientIP(event)).toBe('127.0.0.1')
   })
 
+  it('uses only the socket address when TRUSTED_PROXY_COUNT is 0', () => {
+    vi.stubEnv('TRUSTED_PROXY_COUNT', '0')
+    const { event } = makeEvent({
+      headers: { 'x-forwarded-for': '6.6.6.6, 203.0.113.7', 'x-real-ip': '192.0.2.4' },
+      remoteAddress: '198.51.100.20',
+    })
+    expect(getClientIP(event)).toBe('198.51.100.20')
+  })
+
+  it('gives a client rotating X-Forwarded-For one bucket when TRUSTED_PROXY_COUNT is 0', () => {
+    vi.stubEnv('TRUSTED_PROXY_COUNT', '0')
+    for (const fake of ['1.1.1.1', '2.2.2.2']) {
+      const { event } = makeEvent({
+        headers: { 'x-forwarded-for': fake },
+        remoteAddress: '198.51.100.20',
+      })
+      expect(checkRateLimit(event, limit, 'direct')).toBe(false)
+    }
+    const { event } = makeEvent({
+      headers: { 'x-forwarded-for': '3.3.3.3' },
+      remoteAddress: '198.51.100.20',
+    })
+    expect(checkRateLimit(event, limit, 'direct')).toBe(true)
+  })
+
+  it('ignores a negative TRUSTED_PROXY_COUNT and defaults to one proxy', () => {
+    vi.stubEnv('TRUSTED_PROXY_COUNT', '-1')
+    const { event } = makeEvent({ headers: { 'x-forwarded-for': '6.6.6.6, 203.0.113.7' } })
+    expect(getClientIP(event)).toBe('203.0.113.7')
+  })
+
   it('ignores an invalid TRUSTED_PROXY_COUNT and defaults to one proxy', () => {
     vi.stubEnv('TRUSTED_PROXY_COUNT', 'abc')
     const { event } = makeEvent({ headers: { 'x-forwarded-for': '6.6.6.6, 203.0.113.7' } })
