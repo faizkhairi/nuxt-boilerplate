@@ -1,6 +1,7 @@
 import { defineEventHandler, readBody } from "h3";
 import { registerUser } from "../utils/auth";
-import { checkRateLimit, RateLimitPresets } from "../utils/ratelimit";
+import { logError } from "../utils/logger";
+import { enforceRateLimit, RateLimitPresets } from "../utils/ratelimit";
 
 /**
  * POST /api/register
@@ -23,13 +24,8 @@ import { checkRateLimit, RateLimitPresets } from "../utils/ratelimit";
  * @throws {429} Rate limit exceeded
  */
 export default defineEventHandler(async (event) => {
-  // Apply rate limiting (5 requests per minute)
-  if (checkRateLimit(event, RateLimitPresets.auth)) {
-    throw createError({
-      statusCode: 429,
-      message: RateLimitPresets.auth.message,
-    });
-  }
+  // 5 requests per minute per client IP
+  enforceRateLimit(event, RateLimitPresets.auth, "register");
 
   const body = await readBody(event);
 
@@ -50,9 +46,12 @@ export default defineEventHandler(async (event) => {
       user,
     };
   } catch (error) {
-    throw createError({
-      statusCode: 400,
-      message: (error instanceof Error ? error.message : null) || "Registration failed",
-    });
+    // Only the duplicate-account message is safe to show; anything else
+    // (database or driver errors) stays in the server log.
+    if (error instanceof Error && error.message === "User already exists") {
+      throw createError({ statusCode: 409, message: error.message });
+    }
+    logError(error instanceof Error ? error : new Error(String(error)), { context: "register" });
+    throw createError({ statusCode: 400, message: "Registration failed" });
   }
 });

@@ -19,7 +19,9 @@ const handleLogin = async () => {
       redirect: false,
     })
 
-    if (result?.error) {
+    if (result?.error === 'RateLimited') {
+      error.value = 'Too many sign-in attempts. Please wait a minute and try again.'
+    } else if (result?.error) {
       error.value = 'Invalid email or password'
     } else {
       // Redirect to dashboard on success

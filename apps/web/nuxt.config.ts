@@ -22,7 +22,8 @@ export default defineNuxtConfig({
     },
   },
   nitro: {
-    preset: 'netlify',
+    // Netlify by default; CI's e2e job builds with NITRO_PRESET=node-server
+    preset: process.env.NITRO_PRESET || 'netlify',
   },
   runtimeConfig: {
     // Server-only env vars (not exposed to client)
