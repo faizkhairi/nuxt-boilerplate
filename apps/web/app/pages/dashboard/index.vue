@@ -85,7 +85,7 @@ const handleSignOut = async () => {
         <UiCard>
           <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Getting Started</h3>
           <div class="mt-4 space-y-2 text-sm text-gray-600 dark:text-gray-400">
-            <p>Welcome to your dashboard! This is a production-ready Nuxt 4 boilerplate with:</p>
+            <p>Welcome to your dashboard! This Nuxt 4 boilerplate comes with:</p>
             <ul class="ml-4 list-disc space-y-1">
               <li>Auth with Sidebase Nuxt Auth</li>
               <li>Prisma ORM + PostgreSQL</li>
