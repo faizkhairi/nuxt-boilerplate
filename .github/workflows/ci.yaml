@@ -207,7 +207,7 @@ jobs:
           path: ${{ env.CACHE_PATHS_BUILD }}
           key: ${{ env.CACHE_KEY_BUILD }}
 
-      - uses: nwtgck/actions-netlify@v2.0
+      - uses: nwtgck/actions-netlify@v4.0
         with:
           publish-dir: ${{ env.PATH_BUILD_DOCS }}
           production-deploy: true
@@ -266,7 +266,7 @@ jobs:
           path: ${{ env.CACHE_PATHS_BUILD }}
           key: ${{ env.CACHE_KEY_BUILD }}
 
-      - uses: nwtgck/actions-netlify@v2.0
+      - uses: nwtgck/actions-netlify@v4.0
         with:
          publish-dir: ${{ env.PATH_BUILD_UI }}
          production-deploy: true
