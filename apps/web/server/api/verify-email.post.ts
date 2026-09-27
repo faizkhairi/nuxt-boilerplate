@@ -1,5 +1,6 @@
 import { defineEventHandler, readBody } from "h3";
 import { verifyEmail } from "../utils/auth";
+import { enforceRateLimit, RateLimitPresets } from "../utils/ratelimit";
 
 /**
  * POST /api/verify-email
@@ -18,6 +19,9 @@ import { verifyEmail } from "../utils/auth";
  * @throws {400} Invalid or expired verification token
  */
 export default defineEventHandler(async (event) => {
+  // 5 requests per minute per client IP
+  enforceRateLimit(event, RateLimitPresets.auth, "verify-email");
+
   const body = await readBody(event);
 
   const { email, token } = body;

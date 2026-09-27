@@ -27,7 +27,7 @@ This boilerplate ships with, and CI enforces:
 - **The next-auth patch** (`patches/next-auth.patch`): keeps next-auth on 4.24.15 (fixing GHSA-7rqj-j65f-68wh) while `@sidebase/nuxt-auth` 1.4 still expects the module layout from 4.21.
 - **Secret scanning**: gitleaks runs in CI on every push and pull request.
 - **Dependency auditing**: `pnpm audit --audit-level=high` runs in CI, and Dependabot opens automated dependency update pull requests.
-- **Password hashing** with bcrypt, and email verification enforced before login.
+- **Password hashing** with bcrypt. Email verification is tracked on the session (`session.user.emailVerified`) but does not block sign-in; add a check in `authorize()` in `apps/web/server/api/auth/[...].ts` if your app needs that.
 - **Health check** (`GET /api/health`) for monitoring and load balancers.
 
 ## Security Best Practices
