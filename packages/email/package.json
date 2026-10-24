@@ -13,11 +13,11 @@
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
-    "nodemailer": "^10.0.10"
+    "nodemailer": "^10.2.0"
   },
   "devDependencies": {
     "@myturborepo/tsconfig": "workspace:*",
-    "@types/node": "^24.19.0",
+    "@types/node": "^24.19.2",
     "@types/nodemailer": "^8.0.2",
     "typescript": "~6.0.3"
   }
