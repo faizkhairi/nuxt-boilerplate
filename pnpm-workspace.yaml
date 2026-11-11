@@ -23,10 +23,20 @@ overrides:
   # plugin downgrade. Pulled in by Prisma's CLI even though this project
   # uses the Postgres adapter.
   mysql2: ^3.22.0
+  # GHSA-g4wm-2vf7-vfgr and others: simple-git <4.0.1 allows command execution
+  # through unsafe git config, and its @simple-git/argv-parser <2.0.1 misses
+  # the VISUAL editor check. @nuxt/devtools (dev server only) pins ^3.36.0 and
+  # uses a default import that 4.x dropped, so patches/@nuxt__devtools@3.4.2.patch
+  # switches it to the named `simpleGit` export. Drop both once devtools moves to 4.x.
+  simple-git: ^4.0.2
+  # GHSA-c475-qrg2-pj4r: basic-ftp <6.2.1 quadratic-time DoS in Client.list().
+  # Pulled in by release-it's proxy-agent chain (get-uri pins ^5.3.1).
+  basic-ftp: ^6.2.1
 
 # @sidebase/nuxt-auth 1.4.0 imports `next-auth/core`, which next-auth stopped
 # exporting after 4.21. Staying on 4.21 ships a critical advisory
 # (GHSA-7rqj-j65f-68wh, fixed in 4.24.15), so the patch only re-exposes the
 # `core` folder that 4.24.15 still ships. Drop it once sidebase supports 4.24.
 patchedDependencies:
+  '@nuxt/devtools@3.4.2': patches/@nuxt__devtools@3.4.2.patch
   next-auth: patches/next-auth.patch
