@@ -13,7 +13,7 @@
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
-    "nodemailer": "^10.0.10"
+    "nodemailer": "^10.1.4"
   },
   "devDependencies": {
     "@myturborepo/tsconfig": "workspace:*",
